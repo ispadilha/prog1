@@ -111,7 +111,7 @@ void imprime_r (struct racional r){
     }
 
     if ((r.num == 0) || (r.den == 1)){
-        printf("%d", &r.num);
+        printf("%d", r.num);
         return;
     }
 
