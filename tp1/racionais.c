@@ -72,7 +72,7 @@ struct racional simplifica_r (struct racional r){
 struct racional cria_r (int numerador, int denominador){
     struct racional r;
     r.num = numerador;
-    r.num = denominador;
+    r.den = denominador;
 
     if(denominador != 0){
         r.valido = 1;
