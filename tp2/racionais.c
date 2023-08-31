@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "racionais.h"
 
 /* retorna um numero aleatorio entre min e max, inclusive. */
@@ -130,7 +132,7 @@ void imprime_r (struct racional r){
     }
 
     if ((r.num == 0) || (r.den == 1)){
-        printf("%d", r.num);
+        printf("%d ", r.num);
         return;
     }
 
@@ -139,7 +141,7 @@ void imprime_r (struct racional r){
         return;
     }
 
-    printf("%d/%d", r.num, r.den);
+    printf("%d/%d ", r.num, r.den);
     return;
 }
 
