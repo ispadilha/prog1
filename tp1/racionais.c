@@ -111,7 +111,7 @@ void imprime_r (struct racional r){
     }
 
     if ((r.num == 0) || (r.den == 1)){
-        printf(r.num);
+        printf("%d", &r.num);
         return;
     }
 
@@ -120,7 +120,7 @@ void imprime_r (struct racional r){
         return;
     }
 
-    printf(r.num, "/", r.den);
+    printf("%d/%d", r.num, r.den);
     return;
 }
 
