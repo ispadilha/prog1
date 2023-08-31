@@ -17,7 +17,7 @@ int aleat (int min, int max){
     return x;
 }
 
-int mdc(int a, int b){
+int mdc (int a, int b){
     while (b != 0) {
         int resto = a % b;
         a = b;
