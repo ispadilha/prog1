@@ -1,13 +1,5 @@
 #include "racionais.h"
-/* acrescente demais includes que voce queira ou precise */
 #include "time.h"
-
-/* 
- * Implemente aqui as funcoes definidas no racionais.h 
- * caso queira, você pode definir neste arquivo funcoes
- * adicionais que serao internas e so podem ser usadas
- * aqui.
-*/
 
 int aleat (int min, int max){
     int tamanho = max - min;
@@ -15,9 +7,9 @@ int aleat (int min, int max){
     x = x + min;
 
     /* A operação módulo retorna um resto de divisão,
-    que estará dentro do intervalo correspondente a tamanho - 1.
-    Para corrigir isto, calculo o módulo por tamanho + 1.
-    Isto sorteia um número entre 0 e tamanho. Por isso, somo x + min.
+    que estará dentro do intervalo correspondente a (tamanho - 1).
+    Para corrigir isto, calculo o módulo por (tamanho + 1).
+    Isto sorteia um número entre 0 e o tamanho. Por isso, somo (x + min).
     Assim, o sorteio será entre min e max. */
 
     return x;
@@ -32,7 +24,7 @@ int mdc(int a, int b){
 
     /* O algoritmo de Euclides mantém um laço de repetição enquanto "b" não for zero.
     A cada iteração, atualiza "a" com o valor que estava em "b", e atualiza "b" com o resto da divisão.
-    Quando o resto for zero, a repetição termina. E o resultado, ou seja, o MDC estará armazenado em "a". */
+    Quando o resto for zero, a repetição termina. E o resultado, (ou seja, o MDC) estará armazenado em "a". */
 
     return a;
 }
@@ -40,7 +32,7 @@ int mdc(int a, int b){
 int mmc (int a, int b){
     int x = (a*b)/mdc(a,b);
 
-    /* É possível utilizar a função anterior do MDC */
+    /* Aproveitando a função MDC. */
 
     return x;
 }
@@ -55,7 +47,7 @@ struct racional simplifica_r (struct racional r){
     r.num = (r.num / mdc_r);
     r.den = (r.den / mdc_r);
 
-    /* Aproveitei a função criada anteriormente, para encontrar o MDC entre o numerador e o denominador.
+    /* Aproveitei a função criada anteriormente, para o cálculo do MDC.
     A função simplifica o racional recebido através da divisão de ambos, numerador e denominador, pelo MDC entre os dois. */
 
     if((r.num < 0) && (r.den < 0)){
@@ -63,14 +55,14 @@ struct racional simplifica_r (struct racional r){
         r.den = r.den * (-1);
     }
 
-    /* Se ambos, numerador e denominador, forem negativos, deverá retornar um positivo  */
+    /* Se ambos, numerador e denominador, forem negativos, deverá retornar um positivo. */
 
     if((r.den < 0)){
         r.num = r.num * (-1);
         r.den = r.den * (-1);
     }
 
-    /* Se apenas o denominador for negativo, o sinal deve migrar para o numerador */
+    /* Se apenas o denominador for negativo, o sinal deve migrar para o numerador. */
 
     return r;
 }
@@ -86,8 +78,7 @@ struct racional cria_r (int numerador, int denominador){
         r.valido = 0;
     }
 
-    /* Cria uma struct do tipo racional, com os valores recebidos para numerador e  denominador.
-    Se o valor do denominador for igual a zero, o campo "valido" da struct também recebe zero, assinalando como inválido. */
+    /* Se o valor do denominador for igual a zero, o campo "valido" da struct também recebe zero, assinalando como inválido. */
 
     return r;
 }
@@ -121,4 +112,62 @@ int valido_r (struct racional r){
     } else {
         return 1;
     }
+}
+
+struct racional soma_r (struct racional r1, struct racional r2) {
+    struct racional resultado;
+   
+    int d = mmc(r1.den, r2.den);
+    int n = ((d/r1.den) * r1.num) + ((d/r2.den) * r2.num);
+
+    resultado.num = n;
+    resultado.den = d;
+
+    simplifica_r(resultado);
+
+    resultado.valido = valido_r(resultado);
+
+    return resultado;
+}
+
+struct racional subtrai_r (struct racional r1, struct racional r2) {
+    struct racional resultado;
+   
+    int d = mmc(r1.den, r2.den);
+    int n = ((d/r1.den) * r1.num) + ((d/r2.den) * r2.num);
+
+    resultado.num = n;
+    resultado.den = d;
+
+    simplifica_r(resultado);
+
+    resultado.valido = valido_r(resultado);
+    
+    return resultado;
+}
+
+struct racional multiplica_r (struct racional r1, struct racional r2){
+    struct racional resultado;
+
+    resultado.num = (r1.num * r2.num);
+    resultado.den = (r1.den * r2.den);
+
+    simplifica_r(resultado);
+
+    resultado.valido = valido_r(resultado);
+
+    return resultado;
+}
+
+struct racional divide_r (struct racional r1, struct racional r2){
+    struct racional resultado;
+
+    resultado.num = (r1.num * r2.den);
+    resultado.den = (r1.den * r2.num);
+
+    simplifica_r(resultado);
+
+    resultado.valido = valido_r(resultado);
+
+    return resultado;
 }
