@@ -101,21 +101,25 @@ struct racional sorteia_r (int n){
 }
 
 void imprime_r (struct racional r){
-    simplifica_r(r);
+    if (!valido_r(r)){
+        printf("INVALIDO");
+        return;
+    } else {
+        simplifica_r(r);
+    }
 
     if ((r.num == 0) || (r.den == 1)){
         printf(r.num);
+        return;
     }
 
     if (r.num == r.den) {
         printf("1");
-    }
-
-    if (!valido_r(r)){
-        printf("INVALIDO");
+        return;
     }
 
     printf(r.num, "/", r.den);
+    return;
 }
 
 int valido_r (struct racional r){
