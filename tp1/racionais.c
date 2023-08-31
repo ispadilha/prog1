@@ -155,7 +155,7 @@ struct racional subtrai_r (struct racional r1, struct racional r2) {
     struct racional resultado;
    
     int d = mmc(r1.den, r2.den);
-    int n = ((d/r1.den) * r1.num) + ((d/r2.den) * r2.num);
+    int n = ((d/r1.den) * r1.num) - ((d/r2.den) * r2.num);
 
     resultado.num = n;
     resultado.den = d;

@@ -11,7 +11,7 @@ int main() {
     scanf("%d", &max);  // Lê o valor de max
 
     for (int i = 1; i <= n; i++) {
-        printf("%d: ", i);  // Imprime o valor de i seguido de ": "
+        printf("%d: ", i);  // Imprime o valor de i para mostrar a iteração
 
         struct racional r1 = sorteia_r(max);  // Sorteia o primeiro racional
         struct racional r2 = sorteia_r(max);  // Sorteia o segundo racional
