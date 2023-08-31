@@ -1,5 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "racionais.h"
-#include "time.h"
 
 int aleat (int min, int max){
     int tamanho = max - min;
