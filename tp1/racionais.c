@@ -108,3 +108,17 @@ struct racional sorteia_r (int n){
 
     return r;
 }
+
+/* void imprime_r (struct racional r); */
+/* IMPLEMENTAR */
+
+int valido_r (struct racional r){
+
+    /* Um racional eh invalido se o denominador for nulo */
+    
+    if (r.den == 0){
+        return 0;
+    } else {
+        return 1;
+    }
+}
