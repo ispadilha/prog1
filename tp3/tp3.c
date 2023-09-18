@@ -11,34 +11,41 @@
 
 #define MAX 100
 
-int main (){
-    /* vetor de ponteiros para racionais */
-    struct racional **v;  /* equivalente a struct racional *v[] */
-
+int main() {
+    struct racional **v;
     int i, n;
     long int a, b;
 
-    do(
-        scanf("%d", &n)
-    );
-    while (
-        n < 1 || n > MAX
-    );
-    
-    v = malloc (sizeof(struct racional*)*n);
-    
-    for (i = 0; i<n; i++){
-        /* usar a funcao cria_r */
+    do {
+        scanf("%d", &n);
+    } while (n < 1 || n > MAX);
+
+    v = (struct racional **)malloc(sizeof(struct racional *) * n);
+    if (!v) {
+        printf("Erro na alocação de memória.\n");
+        return 1;
+    }
+
+    for (i = 0; i < n; i++) {
         scanf("%ld %ld", &a, &b);
         v[i] = cria_r(a, b);
+        if (!v[i]) {
+            printf("Erro na alocação de memória para o racional %d.\n", i);
+            return 1;
+        }
     }
 
-    for (i=0; i<n; i++){
+    for (i = 0; i < n; i++) {
         imprime_r(v[i]);
     }
-    
-    printf("\n");
+
+    // Liberando a memória alocada para os racionais
+    for (i = 0; i < n; i++) {
+        destroi_r(v[i]);
+    }
+
+    // Liberando o vetor de ponteiros
+    free(v);
 
     return 0;
-
 }
