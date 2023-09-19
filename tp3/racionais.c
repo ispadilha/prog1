@@ -61,19 +61,21 @@ void destroi_r (struct racional *r){
     free(r);
 }
 
-long int numerador_r (struct racional *r){
-    if(!valido_r(r)){
+int numerador_r (struct racional *r, long int *num){
+    if(!valido_r(r) || r == NULL){
         return 0;
     } else {
-        return r->num;
+        *num = r->num;
+        return 1;
     }
 }
 
-long int denominador_r (struct racional *r){
-    if(!valido_r(r)){
+int denominador_r (struct racional *r, long int *den){
+    if(!valido_r(r) || r == NULL){
         return 0;
     } else {
-        return r->den;
+        *den = r->den;
+        return 1;
     }
 }
 
