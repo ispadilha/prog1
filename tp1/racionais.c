@@ -85,15 +85,15 @@ struct racional cria_r (int numerador, int denominador){
     return r;
 }
 
-struct racional sorteia_r (int n){
+struct racional sorteia_r (int max){
     int den;
     do {
-        den = (rand() % n);
+        den = (rand() % max);
     } while ( den == 0 ) ;
 
     /* Um laço de repetição assegura que o valor do denominador seja diferente de zero. */
 
-    int num = (rand() % n);
+    int num = (rand() % max);
     struct racional r = cria_r(num, den);
 
     /* Usei variáveis locais de inteiros para numerador e para denominador,
@@ -128,7 +128,7 @@ int valido_r (struct racional r){
 
     /* Um racional eh invalido se o denominador for nulo */
     
-    if (r.den == 0){
+    if (r.den == 0 || r.valido == 0){
         return 0;
     } else {
         return 1;
@@ -144,9 +144,9 @@ struct racional soma_r (struct racional r1, struct racional r2) {
     resultado.num = n;
     resultado.den = d;
 
-    simplifica_r(resultado);
-
     resultado.valido = valido_r(resultado);
+
+    simplifica_r(resultado);
 
     return resultado;
 }
@@ -160,9 +160,9 @@ struct racional subtrai_r (struct racional r1, struct racional r2) {
     resultado.num = n;
     resultado.den = d;
 
-    simplifica_r(resultado);
-
     resultado.valido = valido_r(resultado);
+
+    simplifica_r(resultado);
     
     return resultado;
 }
@@ -186,9 +186,12 @@ struct racional divide_r (struct racional r1, struct racional r2){
     resultado.num = (r1.num * r2.den);
     resultado.den = (r1.den * r2.num);
 
-    simplifica_r(resultado);
-
-    resultado.valido = valido_r(resultado);
-
+    if (r2.num == 0) {
+        resultado.valido = 0;
+    } else {
+        resultado.valido = 1;
+        simplifica_r(resultado);
+    }
+    
     return resultado;
 }

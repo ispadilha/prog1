@@ -16,25 +16,35 @@ int main() {
         struct racional r1 = sorteia_r(max);  // Sorteia o primeiro racional
         struct racional r2 = sorteia_r(max);  // Sorteia o segundo racional
 
+        printf("\ndebug: Sorteados dois racionais\n");
+
         imprime_r(r1);  // Imprime r1
         printf(" ");
         imprime_r(r2);  // Imprime r2
         printf(" ");
+
+        printf("\ndebug: Impressos os dois racionais sorteados\n");
 
         if (!valido_r(r1) || !valido_r(r2)) {
             printf("NUMERO INVALIDO\n");
             return 1;
         }
 
+        printf("\ndebug: Nenhum dos racionais sorteados é inválido\n");
+
         struct racional soma = soma_r(r1, r2);
         struct racional subtracao = subtrai_r(r1, r2);
         struct racional multiplicacao = multiplica_r(r1, r2);
         struct racional divisao = divide_r(r1, r2);
 
+        printf("\ndebug: Operações feitas\n");
+
         if (!valido_r(divisao)) {
-            printf("NUMERO INVALIDO\n");
+            printf("DIVISAO INVALIDA\n");
             return 1;
         }
+
+        printf("\ndebug: A divisão não é inválida\n");
 
         imprime_r(soma);
         printf(" ");
