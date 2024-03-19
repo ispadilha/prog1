@@ -5,60 +5,51 @@
 
 int aleat (int min, int max){
     int tamanho = max - min;
-    int x = (rand() % (tamanho + 1));
-    x = x + min;
 
-    /* A operação módulo retorna um resto de divisão,
-    que estará dentro do intervalo correspondente a (tamanho - 1).
-    Para corrigir isto, calculo o módulo por (tamanho + 1).
-    Isto sorteia um número entre 0 e o tamanho. Por isso, somo (x + min).
-    Assim, o sorteio será entre min e max. */
+    // O operador módulo por (tamanho + 1) retornará um valor entre 0 e tamanho, inclusive:
+    int x = (rand() % (tamanho + 1));
+    
+    // Somando (x + min) ao valor acima, o sorteio será entre min e max:
+    x = x + min;
 
     return x;
 }
 
 int mdc (int a, int b){
+    // Utilizando o algoritmo de Euclides:
     while (b != 0) {
         int resto = a % b;
         a = b;
         b = resto;
     }
 
-    /* O algoritmo de Euclides mantém um laço de repetição enquanto "b" não for zero.
-    A cada iteração, atualiza "a" com o valor que estava em "b", e atualiza "b" com o resto da divisão.
-    Quando o resto for zero, a repetição termina. E o resultado, (ou seja, o MDC) estará armazenado em "a". */
-
     return a;
 }
 
 int mmc (int a, int b){
+    // Utilizando o MDC calculado anteriormente:
     int x = (a*b)/mdc(a,b);
-
-    /* Aproveitando a função MDC. */
 
     return x;
 }
 
 struct racional simplifica_r (struct racional r){
+    // A função simplifica o racional recebido através da divisão de ambos, numerador e denominador, pelo MDC entre os dois:
     int mdc_r = mdc(r.num, r.den);
     r.num = (r.num / mdc_r);
     r.den = (r.den / mdc_r);
 
-    /* A função simplifica o racional recebido através da divisão de ambos, numerador e denominador, pelo MDC entre os dois. */
-
+    // Se numerador e denominador forem negativos, o racional retornado será positivo:
     if((r.num < 0) && (r.den < 0)){
         r.num = r.num * (-1);
         r.den = r.den * (-1);
     }
 
-    /* Se ambos, numerador e denominador, forem negativos, deverá retornar um positivo. */
-
+    // Se apenas o denominador for negativo, o sinal deve migrar para o numerador: 
     if((r.den < 0) && (r.num > 0)){
         r.num = r.num * (-1);
         r.den = r.den * (-1);
     }
-
-    /* Se apenas o denominador for negativo, o sinal deve migrar para o numerador. */
 
     return r;
 }
@@ -68,30 +59,28 @@ struct racional cria_r (int numerador, int denominador){
     r.num = numerador;
     r.den = denominador;
 
+    // Se o valor do denominador for igual a zero, o campo "valido" da struct também recebe zero, assinalando o racional criado como inválido:
     if(denominador != 0){
         r.valido = 1;
     } else {
         r.valido = 0;
     }
 
-    /* Se o valor do denominador for igual a zero, o campo "valido" da struct também recebe zero, assinalando como inválido. */
-
     return r;
 }
 
 struct racional sorteia_r (int max){
-    int num = (rand() % max);
-    int den = (rand() % max);
+    // Neste programa, o valor de min será sempre igual a 0, conforme especificação:
+    int num = aleat(0, max);
+    int den = aleat(0, max);
 
     struct racional r = cria_r(num, den);
-
-    /* Usei variáveis locais de inteiros para numerador e para denominador,
-    para poder usar a função anterior, de criação de um número racional.  */
 
     return r;
 }
 
 void imprime_r (struct racional r){
+    // O racional só poderá ser simplificado se não for inválido, ou seja, se o denominador for diferente de 0:
     if (!valido_r(r)){
         printf("INVALIDO");
         return;
@@ -99,13 +88,9 @@ void imprime_r (struct racional r){
         r = simplifica_r(r);
     }
 
+    // Casos em que pode-se omitir o denominador:
     if ((r.num == 0) || (r.den == 1)){
         printf("%d", r.num);
-        return;
-    }
-
-    if (r.num == r.den) {
-        printf("1");
         return;
     }
 
@@ -114,9 +99,7 @@ void imprime_r (struct racional r){
 }
 
 int valido_r (struct racional r){
-
-    /* Um racional eh invalido se o denominador for nulo */
-    
+    // Um racional é inválido se o denominador for igual a 0:
     if (r.den == 0 || r.valido == 0){
         return 0;
     } else {
