@@ -96,7 +96,7 @@ void imprime_r (struct racional r){
         printf("INVALIDO");
         return;
     } else {
-        simplifica_r(r);
+        r = simplifica_r(r);
     }
 
     if ((r.num == 0) || (r.den == 1)){
