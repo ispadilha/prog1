@@ -16,10 +16,11 @@ int main() {
         // Imprimindo o valor de i para mostrar a iteração:
         printf("%d: ", i);
 
-        // Sorteando os dois racionais, e depois imprimindo-os alternadamente com espaços em branco, para melhor visualização:
+        // Sorteando os dois racionais:
         struct racional r1 = sorteia_r(max);
         struct racional r2 = sorteia_r(max);
 
+        // Imprimindo-os alternadamente com espaços em branco, conforme especificação, e também para melhor visualização:
         imprime_r(r1);
         printf(" ");
         imprime_r(r2);

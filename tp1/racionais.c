@@ -59,12 +59,11 @@ struct racional cria_r (int numerador, int denominador){
     r.num = numerador;
     r.den = denominador;
 
-    // Se o valor do denominador for igual a zero, o campo "valido" da struct também recebe zero, assinalando o racional criado como inválido:
-    if(denominador != 0){
-        r.valido = 1;
-    } else {
+    // struct racional consiste nos campos numerador, denominador, e "valido", portanto isso faz parte da criação do racional:
+    if(r.den == 0)
         r.valido = 0;
-    }
+    else
+        r.valido = 1;
 
     return r;
 }
@@ -100,7 +99,7 @@ void imprime_r (struct racional r){
 
 int valido_r (struct racional r){
     // Um racional é inválido se o denominador for igual a 0:
-    if (r.den == 0 || r.valido == 0){
+    if (r.den == 0){
         return 0;
     } else {
         return 1;
