@@ -9,8 +9,11 @@ int main() {
 
     int n, max;
     
-    scanf("%d", &n);
-    scanf("%d", &max);
+    // Assegurando que 0 < n < 100 e 0 < max < 30 conforme especificação:
+    do
+    {scanf("%d", &n);
+    scanf("%d", &max);}
+    while((n <= 0 && n >= 100) && (max <= 0 && max >= 30));
 
     for (int i = 1; i <= n; i++) {
         // Imprimindo o valor de i para mostrar a iteração:
