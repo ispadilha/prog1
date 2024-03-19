@@ -4,48 +4,46 @@
 #include "racionais.h"
 
 int main() {
-    srand(0);  // Inicializando a semente randômica
+    // Inicializando a semente randômica:
+    srand(0);
 
     int n, max;
-    scanf("%d", &n);  // Lê o valor de n
-    scanf("%d", &max);  // Lê o valor de max
+    
+    scanf("%d", &n);
+    scanf("%d", &max);
 
     for (int i = 1; i <= n; i++) {
-        printf("%d: ", i);  // Imprime o valor de i para mostrar a iteração
+        // Imprimindo o valor de i para mostrar a iteração:
+        printf("%d: ", i);
 
-        struct racional r1 = sorteia_r(max);  // Sorteia o primeiro racional
-        struct racional r2 = sorteia_r(max);  // Sorteia o segundo racional
+        // Sorteando os dois racionais, e depois imprimindo-os alternadamente com espaços em branco, para melhor visualização:
+        struct racional r1 = sorteia_r(max);
+        struct racional r2 = sorteia_r(max);
 
-        printf("\ndebug: Sorteados dois racionais\n");
-
-        imprime_r(r1);  // Imprime r1
+        imprime_r(r1);
         printf(" ");
-        imprime_r(r2);  // Imprime r2
+        imprime_r(r2);
         printf(" ");
 
-        printf("\ndebug: Impressos os dois racionais sorteados\n");
-
+        // Verificando se pelo menos um dos dois racionais sorteados é inválido, ou seja, se possui denominador igual a 0:
         if (!valido_r(r1) || !valido_r(r2)) {
             printf("NUMERO INVALIDO\n");
             return 1;
         }
 
-        printf("\ndebug: Nenhum dos racionais sorteados é inválido\n");
-
+        // Efetuando as operações:
         struct racional soma = soma_r(r1, r2);
         struct racional subtracao = subtrai_r(r1, r2);
         struct racional multiplicacao = multiplica_r(r1, r2);
         struct racional divisao = divide_r(r1, r2);
 
-        printf("\ndebug: Operações feitas\n");
-
+        // Verificando se a divisão entre os dois racionais é inválida, ou seja, se o racional no denominador é igual a 0:
         if (!valido_r(divisao)) {
             printf("DIVISAO INVALIDA\n");
             return 1;
         }
 
-        printf("\ndebug: A divisão não é inválida\n");
-
+        // Imprimindo os resultados das operações:
         imprime_r(soma);
         printf(" ");
         imprime_r(subtracao);

@@ -40,17 +40,11 @@ int mmc (int a, int b){
 }
 
 struct racional simplifica_r (struct racional r){
-    if (r.valido == 0) return r;
-
-    /* Se o racional "r" fornecido for inválido (com denominador zero), a função não tem o que fazer,
-    além de devolver o mesmo racional sem operar nada */
-
     int mdc_r = mdc(r.num, r.den);
     r.num = (r.num / mdc_r);
     r.den = (r.den / mdc_r);
 
-    /* Aproveitei a função criada anteriormente, para o cálculo do MDC.
-    A função simplifica o racional recebido através da divisão de ambos, numerador e denominador, pelo MDC entre os dois. */
+    /* A função simplifica o racional recebido através da divisão de ambos, numerador e denominador, pelo MDC entre os dois. */
 
     if((r.num < 0) && (r.den < 0)){
         r.num = r.num * (-1);
@@ -59,7 +53,7 @@ struct racional simplifica_r (struct racional r){
 
     /* Se ambos, numerador e denominador, forem negativos, deverá retornar um positivo. */
 
-    if((r.den < 0)){
+    if((r.den < 0) && (r.num > 0)){
         r.num = r.num * (-1);
         r.den = r.den * (-1);
     }
@@ -86,14 +80,9 @@ struct racional cria_r (int numerador, int denominador){
 }
 
 struct racional sorteia_r (int max){
-    int den;
-    do {
-        den = (rand() % max);
-    } while ( den == 0 ) ;
-
-    /* Um laço de repetição assegura que o valor do denominador seja diferente de zero. */
-
     int num = (rand() % max);
+    int den = (rand() % max);
+
     struct racional r = cria_r(num, den);
 
     /* Usei variáveis locais de inteiros para numerador e para denominador,
