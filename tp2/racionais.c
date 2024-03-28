@@ -1,26 +1,29 @@
 #include "racionais.h"
-/* acrescente demais includes que voce queira ou precise */
 
-/* Funcoes privadas restritas a este modulo.
- * Voce deve implementa-las pois serao necessarias,
- * embora elas nao precisem estar no .h */
-
-/* retorna um numero aleatorio entre min e max, inclusive. */
+/* Retorna um número aleatório entre min e max, inclusive: */
 int aleat (int min, int max){
-/* coloque o codigo aqui */
+    int tamanho = max - min;
+
+    /* O operador módulo por (tamanho + 1) retornará um valor entre 0 e tamanho, inclusive: */
+    int x = (rand() % (tamanho + 1));
+    
+    /* Somando (x + min) ao valor acima, o sorteio será entre min e max: */
+    x = x + min;
+
+    return x;
 }
 
-/* Maximo Divisor Comum entre a e b      */
-/* calcula o mdc pelo metodo de Euclides */
-/* dica: a versao recursiva eh bem elegante! */
-int mdc (int a, int b){
-/* coloque o codigo aqui */
+/* Calcula o MDC pelo método de Euclides, em sua versão recursiva: */
+int mdc(int a, int b) {
+    if (b == 0)
+        return a;
+    return mdc(b, a % b);
 }
 
-/* Minimo Multiplo Comum entre a e b */
-/* mmc = (a * b) / mdc (a, b)        */
+/* Calcula o MMC, utilizando o MDC calculado anteriormente: */
 int mmc (int a, int b){
-/* coloque o codigo aqui */
+    int x = (a*b)/mdc(a,b);
+    return x;
 }
 
 /* Recebe um numero racional e o retorna simplificado.
