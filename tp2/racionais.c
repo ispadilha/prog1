@@ -96,7 +96,7 @@ int valido_r (struct racional r){
     }
 }
 
-/* Retorna a soma (simplificada) dos racionais r1 e r2 no parametro *r3, bem como inicializa o campo "valido" deste: */
+/* Retorna a soma (simplificada) dos racionais r1 e r2 no parâmetro *r3, bem como inicializa o campo "valido" deste: */
 void soma_r (struct racional r1, struct racional r2, struct racional *r3){
     int d = mmc(r1.den, r2.den);
     int n = ((d / r1.den) * r1.num) + ((d / r2.den) * r2.num);
@@ -109,7 +109,7 @@ void soma_r (struct racional r1, struct racional r2, struct racional *r3){
     simplifica_r(r3);
 }
 
-/* Retorna a subtração (simplificada) dos racionais r1 e r2 no parametro *r3, bem como inicializa o campo "valido" deste: */
+/* Retorna a subtração (simplificada) dos racionais r1 e r2 no parâmetro *r3, bem como inicializa o campo "valido" deste: */
 void subtrai_r (struct racional r1, struct racional r2, struct racional *r3){
     int d = mmc(r1.den, r2.den);
     int n = ((d / r1.den) * r1.num) - ((d / r2.den) * r2.num);
@@ -120,4 +120,31 @@ void subtrai_r (struct racional r1, struct racional r2, struct racional *r3){
     r3->valido = valido_r(*r3);
 
     simplifica_r(r3);
+}
+
+/* Retorna a multiplicação dos racionais r1 e r2 no parâmetro *r3, bem como inicializa o campo "valido" deste: */
+void multiplica_r(struct racional r1, struct racional r2, struct racional *r3) {
+    r3->num = r1.num * r2.num;
+    r3->den = r1.den * r2.den;
+
+    r3->valido = valido_r(*r3);
+
+    simplifica_r(r3);
+}
+
+/* Retorna a divisão dos racionais r1 e r2 no parâmetro *r3; a função em si retorna 1 se r3 for válido ou 0 caso contrário. */
+int divide_r(struct racional r1, struct racional r2, struct racional *r3) {
+    if (r2.num == 0) {
+        r3->valido = 0;
+        return 0;
+    } else {
+        r3->num = r1.num * r2.den;
+        r3->den = r1.den * r2.num;
+        
+        r3->valido = valido_r(*r3);
+
+        simplifica_r(r3);
+        
+        return 1;
+    }
 }
