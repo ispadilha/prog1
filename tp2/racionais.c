@@ -47,6 +47,8 @@ void simplifica_r(struct racional *r) {
 
 /* aqui voce pode definir mais funcoes internas, caso queira ou precise */
 
+/* Seguem as implementações das funções definidas no racionais.h: */
+
 struct racional cria_r (int numerador, int denominador){
     struct racional r;
     r.num = numerador;
@@ -60,6 +62,16 @@ struct racional cria_r (int numerador, int denominador){
 
     /* Simplifica o racional antes de retorná-lo, conforme especificação para esta nova versão do programa: */
     simplifica_r(&r);
+
+    return r;
+}
+
+struct racional sorteia_r (int max){
+    // Nesta nova versão do programa, o valor de "min" da função "aleat" será sempre igual a "-max", conforme a nova especificação:
+    int num = aleat(-max, max);
+    int den = aleat(-max, max);
+
+    struct racional r = cria_r(num, den);
 
     return r;
 }
