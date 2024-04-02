@@ -167,3 +167,29 @@ int compara_r (struct racional r1, struct racional r2){
         return 0;
     }
 }
+
+void imprime_r (struct racional r){
+    /* O racional só poderá ser simplificado se não for inválido, ou seja, se o denominador for diferente de 0: */
+    if (!valido_r(r)){
+        printf("INVALIDO");
+        return;
+    } else {
+        simplifica_r(&r);
+    }
+
+    /* Casos em que pode-se omitir o denominador: */
+    if ((r.num == 0) || (r.den == 1)){
+        printf("%d", r.num);
+        return;
+    }
+
+    /* Se o numerador e o denominador tiverem o mesmo valor, deve imprimir somente 1: */
+    if (r.num == r.den) {
+        printf("1");
+        return;
+    }
+
+    /* Caso geral, caso não tenha atendido as checagens acima: */
+    printf("%d/%d", r.num, r.den);
+    return;
+}
