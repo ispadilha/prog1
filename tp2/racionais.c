@@ -95,3 +95,29 @@ int valido_r (struct racional r){
         return 1;
     }
 }
+
+/* Retorna a soma (simplificada) dos racionais r1 e r2 no parametro *r3, bem como inicializa o campo "valido" deste: */
+void soma_r (struct racional r1, struct racional r2, struct racional *r3){
+    int d = mmc(r1.den, r2.den);
+    int n = ((d / r1.den) * r1.num) + ((d / r2.den) * r2.num);
+
+    r3->num = n;
+    r3->den = d;
+
+    r3->valido = valido_r(*r3);
+
+    simplifica_r(r3);
+}
+
+/* Retorna a subtração (simplificada) dos racionais r1 e r2 no parametro *r3, bem como inicializa o campo "valido" deste: */
+void subtrai_r (struct racional r1, struct racional r2, struct racional *r3){
+    int d = mmc(r1.den, r2.den);
+    int n = ((d / r1.den) * r1.num) - ((d / r2.den) * r2.num);
+
+    r3->num = n;
+    r3->den = d;
+
+    r3->valido = valido_r(*r3);
+
+    simplifica_r(r3);
+}
