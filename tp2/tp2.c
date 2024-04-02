@@ -49,8 +49,8 @@ int main() {
         struct racional divisao;
         int divisao_valida = divide_r(r1, r2, &divisao);
 
-        // Verificando se a divisão entre os dois racionais é inválida, ou seja, se o racional no denominador é igual a 0:
-        if (!valido_r(divisao)) {
+        // Verificando se a divisão entre os dois racionais é inválida, usando a operação acima:
+        if (divisao_valida == 0) {
             printf("DIVISAO INVALIDA\n");
             return 1;
         }
