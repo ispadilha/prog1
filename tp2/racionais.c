@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "racionais.h"
 
 /* Retorna um número aleatório entre min e max, inclusive: */
