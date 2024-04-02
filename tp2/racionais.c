@@ -148,3 +148,22 @@ int divide_r(struct racional r1, struct racional r2, struct racional *r3) {
         return 1;
     }
 }
+
+/* Retorna -1 se r1 < r2; 0 se r1 == r2; 1 se r1 > r2 */
+int compara_r (struct racional r1, struct racional r2){
+    /* Calcula o MMC entre os denominadores: */
+    int mmc_den = (r1.den * r2.den) / mdc(r1.den, r2.den);
+
+    /* Normaliza os numeradores usando o MMC entre os denominadores, calculado acima: */
+    int num1 = r1.num * (mmc_den / r1.den);
+    int num2 = r2.num * (mmc_den / r2.den);
+
+    /* Feita a normalização acima, agora é só comparar os numeradores: */
+    if (num1 < num2) {
+        return -1;
+    } else if (num1 > num2) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
