@@ -67,7 +67,7 @@ struct racional cria_r (int numerador, int denominador){
 }
 
 struct racional sorteia_r (int max){
-    // Nesta nova versão do programa, o valor de "min" da função "aleat" será sempre igual a "-max", conforme a nova especificação:
+    /* Nesta nova versão do programa, o valor de "min" da função "aleat" será sempre igual a "-max", conforme a nova especificação: */
     int num = aleat(-max, max);
     int den = aleat(-max, max);
 
@@ -84,4 +84,14 @@ int numerador_r (struct racional r){
 /* Retorna o denominador do racional r */
 int denominador_r (struct racional r){
     return r.den;
+}
+
+int valido_r (struct racional r){
+    /* Conforme especificação, esta função se limita a testar o campo "valido" da struct,
+    o qual deve ter sido inicializado previamente nas demais funções: */
+    if (r.valido == 0){
+        return 0;
+    } else {
+        return 1;
+    }
 }
