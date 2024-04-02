@@ -26,12 +26,24 @@ int mmc (int a, int b){
     return x;
 }
 
-/* Recebe um numero racional e o retorna simplificado.
- * Por exemplo, ao receber 10/8 devera retornar 5/4.
- * Se ambos numerador e denominador forem negativos, devera retornar um positivo.
- * Se o denominador for negativo, o sinal deve migrar para o numerador.
- * Quem chama esta funcao deve garantir que o racional r eh valido */
-void simplifica_r (struct racional *r);
+void simplifica_r(struct racional *r) {
+    /* A função simplifica o racional recebido através da divisão de ambos, numerador e denominador, pelo MDC entre os dois;
+    com sintaxe adaptada para o uso de ponteiros */
+    int mdc_r = mdc(r->num, r->den);
+    r->num = (r->num / mdc_r);
+    r->den = (r->den / mdc_r);
+
+    /* Se numerador e denominador forem negativos, o racional retornado será positivo: */
+    if (r->num < 0 && r->den < 0) {
+        r->num = r->num * (-1);
+        r->den = r->den * (-1);
+    }
+    /* Se apenas o denominador for negativo, o sinal deve migrar para o numerador: */
+    else if (r->den < 0 && r->num > 0) {
+        r->num = r->num * (-1);
+        r->den = r->den * (-1);
+    }
+}
 
 /* aqui voce pode definir mais funcoes internas, caso queira ou precise */
 
