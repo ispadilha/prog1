@@ -75,3 +75,13 @@ struct racional sorteia_r (int max){
 
     return r;
 }
+
+/* Retorna o numerador do racional r */
+int numerador_r (struct racional r){
+    return r.num;
+}
+
+/* Retorna o denominador do racional r */
+int denominador_r (struct racional r){
+    return r.den;
+}
