@@ -30,8 +30,8 @@ int mmc (int a, int b){
 }
 
 void simplifica_r(struct racional *r) {
-    /* A função simplifica o racional recebido através da divisão de ambos, numerador e denominador, pelo MDC entre os dois;
-    com sintaxe adaptada para o uso de ponteiros: */
+    /* A função simplifica o racional recebido através da divisão de ambos,
+    numerador e denominador, pelo MDC entre os dois: */
     int mdc_r = mdc(r->num, r->den);
     r->num = (r->num / mdc_r);
     r->den = (r->den / mdc_r);
@@ -47,8 +47,6 @@ void simplifica_r(struct racional *r) {
         r->den = r->den * (-1);
     }
 }
-
-/* aqui voce pode definir mais funcoes internas, caso queira ou precise */
 
 /* Seguem as implementações das funções definidas no racionais.h: */
 
@@ -91,7 +89,9 @@ int denominador_r (struct racional r){
 
 int valido_r (struct racional r){
     /* Conforme especificação, esta função se limita a testar o campo "valido" da struct,
-    o qual deve ter sido inicializado previamente nas demais funções: */
+    o qual deve ter sido inicializado previamente em outras funções:
+    as que produzem números racionais (cria_r, sorteia_r),
+    e as das quatro operações aritméticas. */
     if (r.valido == 0){
         return 0;
     } else {
@@ -107,7 +107,12 @@ void soma_r (struct racional r1, struct racional r2, struct racional *r3){
     r3->num = n;
     r3->den = d;
 
-    r3->valido = valido_r(*r3);
+    /* Soma entre números racionais válidos é sempre válida: */
+    if(valido_r(r1) && valido_r(r2)){
+        r3->valido = 1;
+    } else {
+        r3->valido = 0;
+    }
 
     simplifica_r(r3);
 }
@@ -120,7 +125,12 @@ void subtrai_r (struct racional r1, struct racional r2, struct racional *r3){
     r3->num = n;
     r3->den = d;
 
-    r3->valido = valido_r(*r3);
+    /* Diferença entre números racionais válidos é sempre válida: */
+    if(valido_r(r1) && valido_r(r2)){
+        r3->valido = 1;
+    } else {
+        r3->valido = 0;
+    }
 
     simplifica_r(r3);
 }
@@ -130,7 +140,12 @@ void multiplica_r(struct racional r1, struct racional r2, struct racional *r3) {
     r3->num = r1.num * r2.num;
     r3->den = r1.den * r2.den;
 
-    r3->valido = valido_r(*r3);
+    /* Produto entre números racionais válidos é sempre válido: */
+    if(valido_r(r1) && valido_r(r2)){
+        r3->valido = 1;
+    } else {
+        r3->valido = 0;
+    }
 
     simplifica_r(r3);
 }
@@ -144,7 +159,13 @@ int divide_r(struct racional r1, struct racional r2, struct racional *r3) {
         r3->num = r1.num * r2.den;
         r3->den = r1.den * r2.num;
         
-        r3->valido = valido_r(*r3);
+        /* Divisão entre números racionais válidos pode não ser válida,
+        portanto o teste é se o denominador resultante é igual a zero: */
+        if(r3->den != 0){
+            r3->valido = 1;
+        } else {
+            r3->valido = 0;
+        }
 
         simplifica_r(r3);
         
