@@ -3,14 +3,14 @@
 CFLAGS = -Wall -g # flags de compilacao
 CC = gcc
 
-all: tp3.o racionais.o
+tp3: tp3.o racionais.o
 	$(CC) -o tp3 tp3.o racionais.o
 
-racionais.o: racionais.c racionais.h
-	$(CC) -c $(CFLAGS) racionais.c
-
-tp3.o: tp3.c racionais.h
+tp3.o: tp3.c
 	$(CC) -c $(CFLAGS) tp3.c
 
+racionais.o: racionais.c
+	$(CC) -c $(CFLAGS) racionais.c
+
 clean:
-	rm -f *.o *~ tp3
+	rm -f *.o tp3
