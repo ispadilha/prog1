@@ -61,7 +61,7 @@ struct racional *cria_r (long int numerador, long int denominador){
     }
 
     /* Simplifica o racional antes de retorná-lo, conforme especificação para esta nova versão do programa: */
-    simplifica_r(&r);
+    simplifica_r(r);
 
     return r;
 }
@@ -114,7 +114,7 @@ struct racional *soma_r (struct racional *r1, struct racional *r2){
         r->den = d;
     }
 
-    simplifica_r(&r);
+    simplifica_r(r);
     return r;
 }
 
@@ -132,7 +132,7 @@ struct racional *subtrai_r (struct racional *r1, struct racional *r2){
         r->den = d;
     }
 
-    simplifica_r(&r);
+    simplifica_r(r);
     return r;
 }
 
@@ -147,7 +147,7 @@ struct racional *multiplica_r (struct racional *r1, struct racional *r2) {
         r->den = r1->den * r2->den;
     }
 
-    simplifica_r(&r);
+    simplifica_r(r);
     return r;
 }
 
@@ -191,16 +191,16 @@ int compara_r (struct racional *r1, struct racional *r2){
 
 void imprime_r (struct racional *r){
     /* O racional só poderá ser simplificado se não for inválido, ou seja, se o denominador for diferente de 0: */
-    if (!valido_r(&r)){
+    if (!valido_r(r)){
         printf("INVALIDO");
         return;
     } else {
-        simplifica_r(&r);
+        simplifica_r(r);
     }
 
     /* Casos em que pode-se omitir o denominador: */
     if ((r->num == 0) || (r->den == 1)){
-        printf("%d", r->num);
+        printf("%ld", r->num);
         return;
     }
 
@@ -211,6 +211,6 @@ void imprime_r (struct racional *r){
     }
 
     /* Caso geral, caso não tenha atendido as checagens acima: */
-    printf("%d/%d", r->num, r->den);
+    printf("%ld/%ld", r->num, r->den);
     return;
 }
