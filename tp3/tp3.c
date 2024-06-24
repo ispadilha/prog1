@@ -3,9 +3,6 @@
 #include <time.h>
 #include "racionais.h"
 
-/* coloque funcoes desejadas aqui. 
- * Exemplo: ordenar, eliminar invalidos... */
-
 void elimina_invalidos(struct racional **v, int *n){
     int i = 0;
 
@@ -35,14 +32,14 @@ void imprime_vetor(struct racional **v, int n){
 
 /* Procedimento para trocar dois elementos,
 que será usado para ordenar o vetor no particionamento do algoritmo QuickSort: */
-void troca(struct racional **a, struct racional **b) {
+void troca(struct racional **a, struct racional **b){
     struct racional *temp = *a;
     *a = *b;
     *b = temp;
 }
 
 /* Particionamento do QuickSort */
-int particiona(struct racional **v, int low, int high) {
+int particiona(struct racional **v, int low, int high){
     struct racional *pivot = v[high];
     int i = low - 1;
 
@@ -57,13 +54,27 @@ int particiona(struct racional **v, int low, int high) {
 }
 
 /* Implementação do QuickSort */
-void quicksort(struct racional **v, int low, int high) {
+void quicksort(struct racional **v, int low, int high){
     if (low < high) {
         int pivot = particiona(v, low, high);
 
         quicksort(v, low, pivot - 1);
         quicksort(v, pivot + 1, high);
     }
+}
+
+/* Função para somar todos os elementos do vetor: */
+struct racional *soma_vetor(struct racional **v, int n) {
+    struct racional *soma = cria_r(0, 1); /* Inicializando a soma como 0/1 */
+    if (soma == NULL) {
+        return NULL;
+    }
+
+    for (int i = 0; i < n; i++) {
+        soma = soma_r(soma, v[i]);
+    }
+
+    return soma;
 }
 
 int main (){
@@ -104,6 +115,12 @@ int main (){
     quicksort(v, 0, n-1);
 
     imprime_vetor(v, n);
+
+    /* Calculando e imprimindo a soma de todos os elementos do vetor: */
+    imprime_r(soma_vetor(v, n));
+
+    /* Mudando de linha após a impressão da soma, conforme especificação: */
+    printf("\n");
 
     /* Liberação de memória */
     for (i = 0; i < n; i++) {
