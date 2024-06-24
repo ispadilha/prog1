@@ -23,14 +23,47 @@ void elimina_invalidos(struct racional **v, int *n){
     }
 }
 
-void imprime_vetor(struct racional **v, int *n){
+void imprime_vetor(struct racional **v, int n){
     int i;
-    for (i = 0; i < *n; i++)
+    for (i = 0; i < n; i++)
     {
         imprime_r(v[i]);
         printf(" ");
     }
     printf("\n");
+}
+
+/* Procedimento para trocar dois elementos,
+que será usado para ordenar o vetor no particionamento do algoritmo QuickSort: */
+void troca(struct racional **a, struct racional **b) {
+    struct racional *temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/* Particionamento do QuickSort */
+int particiona(struct racional **v, int low, int high) {
+    struct racional *pivot = v[high];
+    int i = low - 1;
+
+    for (int j = low; j < high; j++) {
+        if (compara_r(v[j], pivot) < 0) {
+            i++;
+            troca(&v[i], &v[j]);
+        }
+    }
+    troca(&v[i + 1], &v[high]);
+    return i + 1;
+}
+
+/* Implementação do QuickSort */
+void quicksort(struct racional **v, int low, int high) {
+    if (low < high) {
+        int pivot = particiona(v, low, high);
+
+        quicksort(v, low, pivot - 1);
+        quicksort(v, pivot + 1, high);
+    }
 }
 
 int main (){
@@ -61,11 +94,16 @@ int main (){
         v[i] = cria_r(num_lido, den_lido);
     }
 
-    imprime_vetor(v, &n);
+    imprime_vetor(v, n);
 
     elimina_invalidos(v, &n);
 
-    imprime_vetor(v, &n);
+    imprime_vetor(v, n);
+
+    /* Ordenando o vetor, através do algoritmo escolhido: */
+    quicksort(v, 0, n-1);
+
+    imprime_vetor(v, n);
 
     /* Liberação de memória */
     for (i = 0; i < n; i++) {
