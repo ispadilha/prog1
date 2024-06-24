@@ -117,6 +117,7 @@ int main (){
     imprime_vetor(v, n);
 
     /* Calculando e imprimindo a soma de todos os elementos do vetor: */
+    printf("a soma de todos os elementos eh: ");
     imprime_r(soma_vetor(v, n));
 
     /* Mudando de linha após a impressão da soma, conforme especificação: */
