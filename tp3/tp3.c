@@ -7,18 +7,25 @@
  * Exemplo: ordenar, eliminar invalidos... */
 
 void elimina_invalidos(struct racional **v, int *n){
-    int i;
-    for (i = 0; i < *n; i++){
+    int i = 0;
+
+    /* Diferentemente de um laço do tipo "for",
+    este laço do tipo "while" nem sempre irá incrementar a variável de controle.
+    Isto ocorrerá apenas quando o elemento atual já tiver sido "tratado", ou seja,
+    substituído por um racional válido do fim do vetor: */
+    while (i < *n){
         if (denominador_r(v[i]) == 0){
-            v[i] = v[*n];
-            n--;
+            v[i] = v[*n - 1];
+            *n = *n - 1;
+        } else {
+            i++;
         }
     }
 }
 
-void imprime_vetor(struct racional **v, int n){
+void imprime_vetor(struct racional **v, int *n){
     int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < *n; i++)
     {
         imprime_r(v[i]);
         printf(" ");
@@ -30,10 +37,10 @@ int main (){
     int n, i;
     long int num_lido, den_lido;
 
-    /* vetor de ponteiros para racionais */
-    struct racional **v;  /* equivalente a struct racional *v[] */
+    /* Inicializando a semente randômica: */
+    srand(0);
 
-    /* Assegurando que 0 < n < 100 conforme especificação: */
+    /* Lendo um número n tal que 0 < n < 100 conforme especificação: */
     do {
         scanf("%d", &n);
         if(n <= 0 || n >= 100){
@@ -41,22 +48,30 @@ int main (){
         }
     } while (n <= 0 || n >= 100);
 
-    v = malloc(n * sizeof(struct racional));
-
+    /* Declarando um vetor de ponteiros para racionais e alocando dinamicamente memória para o mesmo: */
+    struct racional **v;
+    v = malloc(n * sizeof(struct racional*));
     if (v == NULL){
         return 1;
     }
 
+    /* Recebendo do usuário, via teclado, os valores para preencher o vetor: */
     for (i = 0; i < n; i++){
         scanf("%ld %ld", &num_lido, &den_lido);
         v[i] = cria_r(num_lido, den_lido);
     }
 
-    imprime_vetor(v, n);
+    imprime_vetor(v, &n);
 
     elimina_invalidos(v, &n);
 
-    imprime_vetor(v, n);
+    imprime_vetor(v, &n);
+
+    /* Liberação de memória */
+    for (i = 0; i < n; i++) {
+        free(v[i]);
+    }
+    free(v);
 
     return 0;
 }
