@@ -9,9 +9,12 @@ void elimina_invalidos(struct racional **v, int *n){
     /* Diferentemente de um laço do tipo "for",
     este laço do tipo "while" nem sempre irá incrementar a variável de controle.
     Isto ocorrerá apenas quando o elemento atual já tiver sido "tratado", ou seja,
-    substituído por um racional válido do fim do vetor: */
+    substituído por um racional válido do fim do vetor.
+    Em um caso extremo em que todos os elementos são inválidos,
+    o vetor apenas diminui até chegar a ter tamanho igual a zero. */
     while (i < *n){
         if (denominador_r(v[i]) == 0){
+            destroi_r(&v[i]);
             v[i] = v[*n - 1];
             *n = *n - 1;
         } else {
@@ -65,13 +68,16 @@ void quicksort(struct racional **v, int low, int high){
 
 /* Função para somar todos os elementos do vetor: */
 struct racional *soma_vetor(struct racional **v, int n) {
+    struct racional *aux; /* Um racional auxiliar será usado, para poder liberar memória a cada racional somado */
     struct racional *soma = cria_r(0, 1); /* Inicializando a soma como 0/1 */
     if (soma == NULL) {
         return NULL;
     }
 
     for (int i = 0; i < n; i++) {
+	aux = soma;
         soma = soma_r(soma, v[i]);
+	free (aux);
     }
 
     return soma;
@@ -118,12 +124,17 @@ int main (){
 
     /* Calculando e imprimindo a soma de todos os elementos do vetor: */
     printf("a soma de todos os elementos eh: ");
-    imprime_r(soma_vetor(v, n));
+    struct racional *soma;
+    soma = soma_vetor(v, n);
+    imprime_r(soma);
+
+    /* Liberando a memória referente à soma: */
+    free (soma);
 
     /* Mudando de linha após a impressão da soma, conforme especificação: */
     printf("\n");
 
-    /* Liberação de memória */
+    /* Liberando a memória referente ao vetor: */
     for (i = 0; i < n; i++) {
         free(v[i]);
     }
