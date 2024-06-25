@@ -4,15 +4,18 @@
 #include "racionais.h"
 
 void elimina_invalidos(struct racional **v, int *n){
-    int i = 0;
+    int i;
 
     /* Diferentemente de um laço do tipo "for",
     este laço do tipo "while" nem sempre irá incrementar a variável de controle.
-    Isto ocorrerá apenas quando o elemento atual já tiver sido "tratado", ou seja,
-    substituído por um racional válido do fim do vetor.
+    Isto ocorrerá apenas quando o elemento atual for válido ou já tiver sido "tratado",
+    ou seja, substituído por um racional válido do fim do vetor.
     Em um caso extremo em que todos os elementos são inválidos,
     o vetor apenas diminui até chegar a ter tamanho igual a zero. */
-    while (i < *n){
+
+    i = 0;
+    while (i < *n)
+    {
         if (denominador_r(v[i]) == 0){
             destroi_r(&v[i]);
             v[i] = v[*n - 1];
@@ -86,6 +89,8 @@ struct racional *soma_vetor(struct racional **v, int n) {
 int main (){
     int n, i;
     long int num_lido, den_lido;
+    struct racional **v;
+    struct racional *soma;
 
     /* Inicializando a semente randômica: */
     srand(0);
@@ -98,8 +103,7 @@ int main (){
         }
     } while (n <= 0 || n >= 100);
 
-    /* Declarando um vetor de ponteiros para racionais e alocando dinamicamente memória para o mesmo: */
-    struct racional **v;
+    /* Alocando dinamicamente memória para o vetor de racionais: */
     v = malloc(n * sizeof(struct racional*));
     if (v == NULL){
         return 1;
@@ -124,15 +128,14 @@ int main (){
 
     /* Calculando e imprimindo a soma de todos os elementos do vetor: */
     printf("a soma de todos os elementos eh: ");
-    struct racional *soma;
     soma = soma_vetor(v, n);
     imprime_r(soma);
 
-    /* Liberando a memória referente à soma: */
-    free (soma);
-
     /* Mudando de linha após a impressão da soma, conforme especificação: */
     printf("\n");
+
+    /* Liberando a memória referente à soma: */
+    free (soma);
 
     /* Liberando a memória referente ao vetor: */
     for (i = 0; i < n; i++) {
