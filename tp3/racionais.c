@@ -77,8 +77,8 @@ struct racional *sorteia_r (long int max){
 }
 
 void destroi_r (struct racional **r){
-    r = NULL;
-    free(r);
+    free(*r);
+    *r = NULL;
 }
 
 /* Retorna o numerador do racional r */
