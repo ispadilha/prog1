@@ -11,7 +11,7 @@ CC = gcc
 tp4: tp4.o lista.o
 	$(CC) -o tp4 tp4.o lista.o $(LDFLAGS)
 
-fila.o: lista.c
+lista.o: lista.c
 	$(CC) -c $(CFLAGS) lista.c
 
 tp4.o: tp4.c
