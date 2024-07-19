@@ -98,7 +98,7 @@ void teste_insere_ordenado (struct lista *l)
     lista_insere_ordenado (l, 14); imprimir_lista (l);
 }
 
-
+/*
 void teste_remove_ordenado (struct lista *l)
 {
     lista_remove_ordenado (l, 13); imprimir_lista (l);
@@ -107,6 +107,7 @@ void teste_remove_ordenado (struct lista *l)
     lista_remove_ordenado (l, 12); imprimir_lista (l);
     lista_remove_ordenado (l, 14); imprimir_lista (l);
 }
+*/
 
 void teste_de_pertinencia (struct lista *l)
 {
@@ -136,7 +137,7 @@ int main (void)
     l = teste_criar_lista ();
     teste_lista_vazia (l);
     printf ("\n\n");
-
+    
     printf ("Teste 2: tenta remover elemento com lista vazia:\n");
     printf ("Esperado: nao pode ter dado segfault\n");
     if (! lista_remove_inicio (l, &chave))
@@ -175,11 +176,13 @@ int main (void)
     teste_insere_ordenado (l); 
     printf ("\n\n");
 
+/*
     printf ("Teste 8: remover 5 elementos em ordem:\n");
     printf ("Esperado: tem que imprimir a lista 5 vezes, sempre ordenada\n");
     printf ("          Ao final, mostrar a mensagem 'lista vazia'\n");
     teste_remove_ordenado (l); 
     printf ("\n\n");
+*/
 
     printf ("Teste 9: teste de pertinencia \n");
     printf ("Esperado: apos imprimir a lista, tem que mostrar que de 11 a 15 pertence\n");

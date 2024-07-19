@@ -17,7 +17,7 @@ struct lista *lista_cria (){
 
 void lista_destroi (struct lista **lista){
     if (lista == NULL || *lista == NULL) return;
-    /* Declara um ponteiro para nodo, para percorrer todos os da lista: */
+    /* Declara um ponteiro para nodo, para percorrer a lista: */
     struct nodo *iterando = (*lista)->ini;
     /* Percorre a lista usando outro ponteiro para nodo temporário,
     para liberar a memória de cada um deles, após avançar para o próximo: */
@@ -61,11 +61,11 @@ int lista_insere_fim (struct lista *lista, int chave){
         lista->ini = nodo_a_inserir;
     } else {
         struct nodo *iterando = lista->ini;
-        /* Se a lista não estiver vazia, percorre-a para encontrar o último nodo, ... */
+        /* Se a lista não estiver vazia, percorre-a para encontrar o último nodo: */
         while (iterando->prox != NULL) {
             iterando = iterando->prox;
         }
-        /* Encontrado o atualmente último nodo,
+        /* Encontrado o nodo que é o último atualmente,
         atualiza seu "próximo" de NULL para o novo último nodo: */
         iterando->prox = nodo_a_inserir;
     }
@@ -111,14 +111,14 @@ int lista_remove_inicio (struct lista *lista, int *chave){
     lista->ini = nodo_a_remover->prox;
     /* Libera a memória usada para o antigo nodo inicial: */
     free(nodo_a_remover);
-    /* Diminui o tamanho da lista: */
+    /* Após a remoção, pode-se diminuir o tamanho da lista: */
     lista->tamanho--;
     return 1;
 }
 
 int lista_remove_fim (struct lista *lista, int *chave){
     if (lista == NULL || lista->ini == NULL) return 0;
-    /* Cria um novo ponteiro para o nodo inicial, a fim de para percorrer a lista: */
+    /* Cria um novo ponteiro para o nodo inicial, a fim de percorrer a lista: */
     struct nodo *iterando = lista->ini;
     /* Caso a lista tenha apenas um nodo, o inicial é também o final: */
     if (iterando->prox == NULL) {
@@ -127,10 +127,10 @@ int lista_remove_fim (struct lista *lista, int *chave){
         /* Libera a memória usada para o nodo que, neste caso,
         nem precisou iterar: */
         free(iterando);
-        /* Aterra o ponteiro do nodo cabeça: */
+        /* Neste caso, a lista ficou vazia, portanto aterra o ponteiro do nodo cabeça: */
         lista->ini = NULL;
     } else {
-        /* Caso a lista tenha mais nodos, é preciso outro ponteiro,
+        /* Caso a lista tenha mais de um nodo, é preciso outro ponteiro,
         para guardar o nodo anterior ao que está na iteração atual: */
         struct nodo *anterior;
         while (iterando->prox != NULL) {
@@ -139,38 +139,40 @@ int lista_remove_fim (struct lista *lista, int *chave){
         }
         /* Ao encontrar um "próximo" que na verdade é NULL,
         isso significa que foi encontrado o último nodo.
-        Então, guarda-se seu valor no parâmetro chave,
-        e aterra-se seu ponteiro: */
+        Então, guarda-se seu valor no parâmetro chave: */
         *chave = iterando->chave;
+        /* E o antigo penúltimo nodo torna-se o novo último nodo,
+        portanto seu "próximo" aponta para NULL: */
         anterior->prox = NULL;
         /* Libera a memória usada para o nodo que iterou percorrendo a lista: */
         free(iterando);
     }
+    /* Após a remoção, pode-se diminuir o tamanho da lista: */
     lista->tamanho--;
     return 1;
 }
 
+/*
 int lista_remove_ordenado (struct lista *lista, int chave){
     if (lista == NULL || lista->ini == NULL) return 0;
-    struct nodo *atual = lista->ini;
-    struct nodo *anterior = NULL;
-    while (atual != NULL && atual->chave != chave) {
-        anterior = atual;
-        atual = atual->prox;
+    struct nodo *iterando = lista->ini;
+    
+    while (iterando != NULL) {
+        if (iterando->chave == chave){
+            free(iterando);
+        } else {
+        iterando = iterando->prox;
+        }
     }
-    if (atual == NULL) return 0;
-    if (anterior == NULL) {
-        lista->ini = atual->prox;
-    } else {
-        anterior->prox = atual->prox;
-    }
-    free(atual);
     lista->tamanho--;
     return 1;
 }
+*/
 
 int lista_vazia (struct lista *lista){
-    if (lista == NULL){
+    /* Caso o nodo cabeça aponte para NULL, significa que não há nenhum nodo,
+    e portanto a lista está vazia: */
+    if (lista->ini == NULL){
         return 1;
     } else {
         return 0;
@@ -183,10 +185,14 @@ int lista_tamanho (struct lista *lista){
 
 int lista_pertence (struct lista *lista, int chave){
     if (lista == NULL) return 0;
-    struct nodo *atual = lista->ini;
-    while (atual != NULL) {
-        if (atual->chave == chave) return 1;
-        atual = atual->prox;
+    /* Cria um novo ponteiro para nodo, inicialmente apontando para o início,
+    a fim de percorrer a lista: */
+    struct nodo *iterando = lista->ini;
+    /* Enquanto não apontar para NULL, significa que não chegou ao fim da lista,
+    então faz a verificação e incrementa a iteração: */
+    while (iterando != NULL) {
+        if (iterando->chave == chave) return 1;
+        iterando = iterando->prox;
     }
     return 0;
 }
@@ -198,7 +204,12 @@ void lista_inicia_iterador (struct lista *lista){
 
 int lista_incrementa_iterador (struct lista *lista, int *chave){
     if (lista == NULL || lista->ptr == NULL) return 0;
+    /* "Retorna" o valor apontado no parâmetro, conforme especificação: */
     *chave = lista->ptr->chave;
+    /* Avança para uma próxima iteração: */
     lista->ptr = lista->ptr->prox;
+    /* Como passou pela verificação inicial deste escopo,
+    então nesta iteração foi apontado um elemento válido,
+    portanto pode-se retornar 1: */
     return 1;
 }
