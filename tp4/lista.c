@@ -155,15 +155,32 @@ int lista_remove_fim (struct lista *lista, int *chave){
 /*
 int lista_remove_ordenado (struct lista *lista, int chave){
     if (lista == NULL || lista->ini == NULL) return 0;
+    Cria um novo ponteiro para o nodo inicial, a fim de percorrer a lista:
     struct nodo *iterando = lista->ini;
-    
+    Será necessário outro ponteiro para acompanhar a iteração guardando o nodo anterior: (???)
+    struct nodo *anterior;
+
+    Enquanto não apontar para NULL, significa que não chegou ao fim da lista,
+    então isso é usado como condição para prosseguir na iteração:
     while (iterando != NULL) {
+        anterior = iterando;
+        iterando = iterando->prox;
+        Caso a chave procurada seja encontrada, libera a memória usada para o referido nodo,
+        após aterrar seu ponteiro, a fim de fazer a remoção específica desejada: (???)
+        Antes disso era necessário atualizar o ponteiro do nodo anterior a ele? (???)
         if (iterando->chave == chave){
+            anterior->prox = iterando->prox;
+            iterando->prox = NULL;
             free(iterando);
         } else {
+        Quando não é encontrada a chave procurada,
+        apenas prossegue a uma próxima iteração: (???)
+        Cuidar com dois incrementos na mesma iteração? (???)
+        anterior = iterando;
         iterando = iterando->prox;
         }
     }
+    Após a remoção, pode-se diminuir o tamanho da lista:
     lista->tamanho--;
     return 1;
 }
