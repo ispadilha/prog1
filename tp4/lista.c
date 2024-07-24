@@ -152,39 +152,46 @@ int lista_remove_fim (struct lista *lista, int *chave){
     return 1;
 }
 
-/*
-int lista_remove_ordenado (struct lista *lista, int chave){
+int lista_remove_ordenado(struct lista *lista, int chave) {
     if (lista == NULL || lista->ini == NULL) return 0;
-    Cria um novo ponteiro para o nodo inicial, a fim de percorrer a lista:
+    
+    /* Cria um novo ponteiro para o nodo inicial, a fim de percorrer a lista: */
     struct nodo *iterando = lista->ini;
-    Será necessário outro ponteiro para acompanhar a iteração guardando o nodo anterior: (???)
-    struct nodo *anterior;
-
-    Enquanto não apontar para NULL, significa que não chegou ao fim da lista,
-    então isso é usado como condição para prosseguir na iteração:
-    while (iterando != NULL) {
+    /* Outro ponteiro para nodo será necessário, para percorrer armazenando o nodo
+    anterior ao que está iterando de forma principal: */
+    struct nodo *anterior = NULL;
+    
+    /* Enquando não chegar ao fim da lista e não for encontrada a chave procurada,
+    os ponteiros utilizados para percorrer a lista são "incrementados",
+    isto é, avançam: */
+    while (iterando != NULL && iterando->chave != chave) {
         anterior = iterando;
         iterando = iterando->prox;
-        Caso a chave procurada seja encontrada, libera a memória usada para o referido nodo,
-        após aterrar seu ponteiro, a fim de fazer a remoção específica desejada: (???)
-        Antes disso era necessário atualizar o ponteiro do nodo anterior a ele? (???)
-        if (iterando->chave == chave){
-            anterior->prox = iterando->prox;
-            iterando->prox = NULL;
-            free(iterando);
-        } else {
-        Quando não é encontrada a chave procurada,
-        apenas prossegue a uma próxima iteração: (???)
-        Cuidar com dois incrementos na mesma iteração? (???)
-        anterior = iterando;
-        iterando = iterando->prox;
-        }
     }
-    Após a remoção, pode-se diminuir o tamanho da lista:
+    
+    /* Se a chave não foi encontrada na lista, a função retorna 0,
+    conforme especificação: */
+    if (iterando == NULL) return 0;
+    
+    if (anterior == NULL) {
+        /* Se anterior continua sendo NULL, então não foi satisfeita condição
+        para entrar no laço acima, e portanto a chave procurada
+        foi encontrada no primeiro nodo da lista, o qual será então removido: */
+        lista->ini = iterando->prox;
+    } else {
+        /* Senão, o laço acima ocorreu, e a chave procurada foi encontrada no meio
+        ou no fim da lista, cujo nodo será então removido: */
+        anterior->prox = iterando->prox;
+    }
+    
+    /* Após remanejar os ponteiros, a memória referente ao nodo removido
+    pode ser liberada: */
+    free(iterando);
+    /* Após a remoção, pode-se diminuir o tamanho da lista: */
     lista->tamanho--;
     return 1;
 }
-*/
+
 
 int lista_vazia (struct lista *lista){
     /* Caso o nodo cabeça aponte para NULL, significa que não há nenhum nodo,
