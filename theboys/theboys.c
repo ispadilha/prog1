@@ -254,6 +254,7 @@ void processa_evento_entra(struct evento_t *ev) {
     /* calcula TPB = tempo de permanência na base:
     TPB = 15 + paciência de H * aleatório [1...20] */
     int tpb = 15 + heroi->paciencia * (rand() % 20 + 1);
+
     printf("%6d: ENTRA   HEROI %2d BASE %d (%2d/%2d) SAI %d\n", tempo, h, b, base->presentes->card, base->lotacao, tempo + tpb);
 
     struct evento_t *evento_sai = cria_evento(tempo + tpb, 9, h, b);
@@ -269,6 +270,7 @@ void processa_evento_sai(struct evento_t *ev) {
 
     /* retira H do conjunto de heróis presentes em B: */
     retira_cjt(base->presentes, h);
+
     printf("%6d: SAI     HEROI %2d BASE %d (%2d/%2d)\n", tempo, h, b, base->presentes->card, base->lotacao);
 
     /* escolhe uma base destino D aleatória: */
@@ -459,11 +461,31 @@ void executa_simulacao() {
     }
 }
 
+/* Libera a memória usada nos diferentes conjuntos de habilidades, de heróis
+presentes em cada base, e suas filas de espera: */
+void destroi_mundo() {
+    int i;
+
+    for (i = 0; i < N_HEROIS; i++)
+    {
+        destroi_cjt(mundo.herois[i].habilidades);
+    }
+    for (i = 0; i < N_BASES; i++) {
+        destroi_cjt(mundo.bases[i].presentes);
+        fila_destroi(&mundo.bases[i].espera);
+    }
+    for (i = 0; i < N_MISSOES; i++) {
+        destroi_cjt(mundo.missoes[i].habilidades);
+    }
+    destroi_lef(lef);
+}
+
 int main() {
     srand(0); /* Use zero, não faça com time(0) */
 
     inicializa_mundo();
     executa_simulacao();
+    destroi_mundo();
 
     return 0;
 }
