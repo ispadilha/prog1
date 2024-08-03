@@ -166,6 +166,9 @@ void processa_evento_chega(struct evento_t *ev) {
     heroi_t *heroi = &mundo.herois[h];
     base_t *base = &mundo.bases[b];
 
+    /* atualiza base de H: */
+    mundo.herois[h].base = b;
+
     int espera;
     /* se há vagas em B e a fila de espera em B está vazia: */
     if (base->presentes->card < base->lotacao && fila_vazia(base->espera)) {
