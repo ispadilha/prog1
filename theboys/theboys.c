@@ -337,29 +337,48 @@ void processa_evento_missao(struct evento_t *ev) {
         inicia_iterador_cjt(base_mais_proxima->presentes);
         printf("%6d: MISSAO  %d BASE %d DIST %d HEROIS [", tempo, m, base_mais_proxima->id, menor_distancia);
         while (incrementa_iterador_cjt(base_mais_proxima->presentes, &heroi_id)) {
-            heroi_t *heroi = &mundo.herois[heroi_id];
             printf(" %d", heroi_id);
+        }
+        printf(" ]\n");
+
+        /* Inicializa um conjunto para a união das habilidades dos heróis presentes: */
+        struct conjunto *habilidades_heroi;
+
+        inicia_iterador_cjt(base_mais_proxima->presentes);
+        while (incrementa_iterador_cjt(base_mais_proxima->presentes, &heroi_id)) {
+            heroi_t *heroi = &mundo.herois[heroi_id];
+            printf("%6d: MISSAO  %d HAB HEROI %2d: [", tempo, m, heroi_id);
+
+            habilidades_heroi = heroi->habilidades;
+            inicia_iterador_cjt(habilidades_heroi);
             int hab;
-            inicia_iterador_cjt(heroi->habilidades);
-            while (incrementa_iterador_cjt(heroi->habilidades, &hab)) {
+            while (incrementa_iterador_cjt(habilidades_heroi, &hab)) {
+                printf(" %d", hab);
                 insere_cjt(habilidades_unidas, hab);
             }
+            printf(" ]\n");
+        }
+
+        printf("%6d: MISSAO  %d UNIAO HAB BASE %d: [", tempo, m, base_mais_proxima->id);
+        inicia_iterador_cjt(habilidades_unidas);
+        int hab;
+        while (incrementa_iterador_cjt(habilidades_unidas, &hab)) {
+            printf(" %d", hab);
         }
         printf(" ]\n");
 
         /* Inicializa uma flag para verificar se as habilidades unidas, dos heróis presentes na base,
         formam um conjunto compatível com as habilidades requeridas pela missão: */
-        int pode_cumprir = 1;
+        int podem_cumprir = 1;
         for (i = 0; i < missao->habilidades->card; i++) {
-            int hab;
             incrementa_iterador_cjt(missao->habilidades, &hab);
             if (!pertence_cjt(habilidades_unidas, hab)) {
-                pode_cumprir = 0;
+                podem_cumprir = 0;
                 break;
             }
         }
 
-        if (pode_cumprir) {
+        if (podem_cumprir) {
             printf("%6d: MISSAO  %d CUMPRIDA BASE %d\n", tempo, m, base_mais_proxima->id);
             missao->cumprida = 1;
             inicia_iterador_cjt(base_mais_proxima->presentes);
