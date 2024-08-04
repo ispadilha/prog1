@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
+
 #include "conjunto.h"
 #include "fila.h"
 #include "lef.h"
@@ -54,9 +56,8 @@ mundo_t mundo;
 struct lef_t *lef;
 
 /* Função auxiliar */
-int distancia(int x1, int y1, int x2, int y2) {
-    /* todo pensar numa forma melhor de medir distância (pitágoras?): */
-    return abs(x2 - x1) + abs(y2 - y1);
+double distancia(int x1, int y1, int x2, int y2) {
+    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }
 
 /* Inicialização das entidades */
