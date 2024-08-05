@@ -163,7 +163,6 @@ void processa_evento_chega(struct evento_t *ev) {
     int tempo = ev->tempo;
     int h = ev->dado1;
     int b = ev->dado2;
-    if (h >= mundo.nHerois || b >= mundo.nBases) return;
     heroi_t *heroi = &mundo.herois[h];
     base_t *base = &mundo.bases[b];
 
@@ -195,7 +194,6 @@ void processa_evento_espera(struct evento_t *ev) {
     int tempo = ev->tempo;
     int h = ev->dado1;
     int b = ev->dado2;
-    if (h >= mundo.nHerois || b >= mundo.nBases) return;
     base_t *base = &mundo.bases[b];
 
     /* adiciona H ao fim da fila de espera de B: */
@@ -210,7 +208,6 @@ void processa_evento_desiste(struct evento_t *ev) {
     int tempo = ev->tempo;
     int h = ev->dado1;
     int b = ev->dado2;
-    if (h >= mundo.nHerois || b >= mundo.nBases) return;
 
     printf("%6d: DESISTE HEROI %2d BASE %d\n", tempo, h, b);
 
@@ -223,10 +220,7 @@ void processa_evento_desiste(struct evento_t *ev) {
 void processa_evento_avisa(struct evento_t *ev) {
     int tempo = ev->tempo;
     int b = ev->dado1;
-    if (b >= mundo.nBases)
-        return;
     base_t *base = &mundo.bases[b];
-
     int cardPresentes = cardinalidade_cjt(base->presentes);
 
     /* Imprime a mensagem de saída com os dados da fila: */
@@ -255,10 +249,8 @@ void processa_evento_entra(struct evento_t *ev) {
     int tempo = ev->tempo;
     int h = ev->dado1;
     int b = ev->dado2;
-    if (h >= mundo.nHerois || b >= mundo.nBases) return;
     heroi_t *heroi = &mundo.herois[h];
     base_t *base = &mundo.bases[b];
-
     int cardPresentes = cardinalidade_cjt(base->presentes);
 
     /* calcula TPB = tempo de permanência na base:
@@ -275,9 +267,7 @@ void processa_evento_sai(struct evento_t *ev) {
     int tempo = ev->tempo;
     int h = ev->dado1;
     int b = ev->dado2;
-    if (h >= mundo.nHerois || b >= mundo.nBases) return;
     base_t *base = &mundo.bases[b];
-
     int cardPresentes = cardinalidade_cjt(base->presentes);
 
     /* retira H do conjunto de heróis presentes em B: */
@@ -297,7 +287,6 @@ void processa_evento_viaja(struct evento_t *ev) {
     int tempo = ev->tempo;
     int h = ev->dado1;
     int d = ev->dado2;
-    if (h >= mundo.nHerois || d >= mundo.nBases) return;
     heroi_t *heroi = &mundo.herois[h];
     base_t *base_atual = &mundo.bases[heroi->base];
     base_t *base_destino = &mundo.bases[d];
@@ -314,9 +303,7 @@ void processa_evento_viaja(struct evento_t *ev) {
 void processa_evento_missao(struct evento_t *ev) {
     int tempo = ev->tempo;
     int m = ev->dado1;
-    if (m >= mundo.nMissoes) return;
     missao_t *missao = &mundo.missoes[m];
-
     int cardHabilidades = cardinalidade_cjt(missao->habilidades);
 
     missao->tentativas++;
@@ -331,7 +318,7 @@ void processa_evento_missao(struct evento_t *ev) {
     printf(" ]\n");
 
     base_t *base_mais_proxima = NULL;
-    int menor_distancia = N_TAMANHO_MUNDO * 2;
+    int menor_distancia = N_TAMANHO_MUNDO;
 
     /* calcula a distância de cada base ao local da missão M, e encontra a base mais próxima: */
     for (i = 0; i < N_BASES; i++) {
@@ -489,7 +476,6 @@ void processa_evento(struct evento_t *ev) {
 void executa_simulacao() {
     while (mundo.relogio < T_FIM_DO_MUNDO) {
         struct evento_t *ev = retira_lef(lef);
-        if (ev == NULL) break;
         mundo.relogio = ev->tempo;
         processa_evento(ev);
         destroi_evento(ev);
