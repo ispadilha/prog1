@@ -312,6 +312,7 @@ void processa_evento_missao(struct evento_t *ev) {
     missao->tentativas++;
     printf("%6d: MISSAO  %d TENT %d HAB REQ: [", tempo, m, missao->tentativas);
     int i;
+    inicia_iterador_cjt(missao->habilidades);
     for (i = 0; i < missao->habilidades->card; i++) {
         int hab;
         incrementa_iterador_cjt(missao->habilidades, &hab);
@@ -371,6 +372,7 @@ void processa_evento_missao(struct evento_t *ev) {
         /* Inicializa uma flag para verificar se as habilidades unidas, dos heróis presentes na base,
         formam um conjunto compatível com as habilidades requeridas pela missão: */
         int podem_cumprir = 1;
+        inicia_iterador_cjt(missao->habilidades);
         for (i = 0; i < missao->habilidades->card; i++) {
             incrementa_iterador_cjt(missao->habilidades, &hab);
             if (!pertence_cjt(habilidades_unidas, hab)) {
