@@ -167,23 +167,25 @@ void processa_evento_chega(struct evento_t *ev) {
     heroi_t *heroi = &mundo.herois[h];
     base_t *base = &mundo.bases[b];
 
+    int cardPresentes = cardinalidade_cjt(base->presentes);
+
     /* atualiza base de H: */
     mundo.herois[h].base = b;
 
     int espera;
     /* se há vagas em B e a fila de espera em B está vazia: */
-    if (base->presentes->card < base->lotacao && fila_vazia(base->espera)) {
+    if (cardPresentes < base->lotacao && fila_vazia(base->espera)) {
         espera = 1;
     } else {
         espera = heroi->paciencia > 10 * fila_tamanho(base->espera);
     }
 
     if (espera) {
-        printf("%6d: CHEGA   HEROI %2d BASE %d (%2d/%2d) ESPERA\n", tempo, h, b, base->presentes->card, base->lotacao);
+        printf("%6d: CHEGA   HEROI %2d BASE %d (%2d/%2d) ESPERA\n", tempo, h, b, cardPresentes, base->lotacao);
         struct evento_t *evento_espera = cria_evento(tempo, 4, h, b);
         insere_lef(lef, evento_espera);
     } else {
-        printf("%6d: CHEGA   HEROI %2d BASE %d (%2d/%2d) DESISTE\n", tempo, h, b, base->presentes->card, base->lotacao);
+        printf("%6d: CHEGA   HEROI %2d BASE %d (%2d/%2d) DESISTE\n", tempo, h, b, cardPresentes, base->lotacao);
         struct evento_t *evento_desiste = cria_evento(tempo, 5, h, b);
         insere_lef(lef, evento_desiste);
     }
@@ -225,8 +227,10 @@ void processa_evento_avisa(struct evento_t *ev) {
         return;
     base_t *base = &mundo.bases[b];
 
+    int cardPresentes = cardinalidade_cjt(base->presentes);
+
     /* Imprime a mensagem de saída com os dados da fila: */
-    printf("%6d: AVISA   PORTEIRO BASE %d (%2d/%2d) FILA [", tempo, b, base->presentes->card, base->lotacao);
+    printf("%6d: AVISA   PORTEIRO BASE %d (%2d/%2d) FILA [", tempo, b, cardPresentes, base->lotacao);
     struct nodo *atual = base->espera->ini;
     while (atual != NULL) {
         printf(" %2d", atual->chave);
@@ -235,7 +239,7 @@ void processa_evento_avisa(struct evento_t *ev) {
     printf(" ]\n");
 
     /* enquanto houver vaga em B e houver heróis esperando na fila: */
-    while (base->presentes->card < base->lotacao && !fila_vazia(base->espera)) {
+    while (cardPresentes < base->lotacao && !fila_vazia(base->espera)) {
         int h;
         /* retira primeiro herói (H') da fila de B: */
         dequeue(base->espera, &h);
@@ -255,11 +259,13 @@ void processa_evento_entra(struct evento_t *ev) {
     heroi_t *heroi = &mundo.herois[h];
     base_t *base = &mundo.bases[b];
 
+    int cardPresentes = cardinalidade_cjt(base->presentes);
+
     /* calcula TPB = tempo de permanência na base:
     TPB = 15 + paciência de H * aleatório [1...20] */
     int tpb = 15 + heroi->paciencia * (rand() % 20 + 1);
 
-    printf("%6d: ENTRA   HEROI %2d BASE %d (%2d/%2d) SAI %d\n", tempo, h, b, base->presentes->card, base->lotacao, tempo + tpb);
+    printf("%6d: ENTRA   HEROI %2d BASE %d (%2d/%2d) SAI %d\n", tempo, h, b, cardPresentes, base->lotacao, tempo + tpb);
 
     struct evento_t *evento_sai = cria_evento(tempo + tpb, 9, h, b);
     insere_lef(lef, evento_sai);
@@ -272,10 +278,12 @@ void processa_evento_sai(struct evento_t *ev) {
     if (h >= mundo.nHerois || b >= mundo.nBases) return;
     base_t *base = &mundo.bases[b];
 
+    int cardPresentes = cardinalidade_cjt(base->presentes);
+
     /* retira H do conjunto de heróis presentes em B: */
     retira_cjt(base->presentes, h);
 
-    printf("%6d: SAI     HEROI %2d BASE %d (%2d/%2d)\n", tempo, h, b, base->presentes->card, base->lotacao);
+    printf("%6d: SAI     HEROI %2d BASE %d (%2d/%2d)\n", tempo, h, b, cardPresentes, base->lotacao);
 
     /* escolhe uma base destino D aleatória: */
     int d = rand() % N_BASES;
@@ -309,11 +317,13 @@ void processa_evento_missao(struct evento_t *ev) {
     if (m >= mundo.nMissoes) return;
     missao_t *missao = &mundo.missoes[m];
 
+    int cardHabilidades = cardinalidade_cjt(missao->habilidades);
+
     missao->tentativas++;
     printf("%6d: MISSAO  %d TENT %d HAB REQ: [", tempo, m, missao->tentativas);
     int i;
     inicia_iterador_cjt(missao->habilidades);
-    for (i = 0; i < missao->habilidades->card; i++) {
+    for (i = 0; i < cardHabilidades; i++) {
         int hab;
         incrementa_iterador_cjt(missao->habilidades, &hab);
         printf(" %d", hab);
@@ -373,7 +383,7 @@ void processa_evento_missao(struct evento_t *ev) {
         formam um conjunto compatível com as habilidades requeridas pela missão: */
         int podem_cumprir = 1;
         inicia_iterador_cjt(missao->habilidades);
-        for (i = 0; i < missao->habilidades->card; i++) {
+        for (i = 0; i < cardHabilidades; i++) {
             incrementa_iterador_cjt(missao->habilidades, &hab);
             if (!pertence_cjt(habilidades_unidas, hab)) {
                 podem_cumprir = 0;
