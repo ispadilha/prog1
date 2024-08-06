@@ -26,7 +26,7 @@ theboys.o: theboys.c
 # arquivo TGZ para entregar
 entrega: clean
 	mkdir $(ENTREGA)
-	cp *.c *.h makefile $(ENTREGA)
+	cp *.c *.h makefile conjunto.o $(ENTREGA)
 	chmod 600 $(ENTREGA)/*
 	tar czvf $(ENTREGA).tgz $(ENTREGA)
 	rm -rf $(ENTREGA)
