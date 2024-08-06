@@ -301,14 +301,29 @@ void processa_evento_viaja(struct evento_t *ev) {
 }
 
 void processa_evento_missao(struct evento_t *ev) {
+    /* Dados do evento tipo missão: */
     int tempo = ev->tempo;
     int m = ev->dado1;
     missao_t *missao = &mundo.missoes[m];
+
+    /* Será usado para iterações no conjunto de
+    habilidades requeridas para a missão: */
     int cardHabilidades = cardinalidade_cjt(missao->habilidades);
 
+    /* Serão usados para encontrar a base mais próxima: */
+    int menor_distancia = N_TAMANHO_MUNDO;
+    base_t *base_mais_proxima = NULL;
+
+    /* Flag inicializada como falso (0) */
+    int base_pode_cumprir = 0;
+
+    /* Serão usados para iterações: */
+    int i, heroi_id;
+
     missao->tentativas++;
+    
+    /* Impressão das habilidades requeridas: */
     printf("%6d: MISSAO  %d TENT %d HAB REQ: [", tempo, m, missao->tentativas);
-    int i;
     inicia_iterador_cjt(missao->habilidades);
     for (i = 0; i < cardHabilidades; i++) {
         int hab;
@@ -317,48 +332,40 @@ void processa_evento_missao(struct evento_t *ev) {
     }
     printf(" ]\n");
 
-    base_t *base_mais_proxima = NULL;
-    int menor_distancia = N_TAMANHO_MUNDO;
-
-    /* calcula a distância de cada base ao local da missão M, e encontra a base mais próxima: */
+    /* Impressão dos dados de cada uma das bases: */
     for (i = 0; i < N_BASES; i++) {
         base_t *base = &mundo.bases[i];
         int dist = distancia(base->x, base->y, missao->x, missao->y);
-        if (dist < menor_distancia) {
-            menor_distancia = dist;
-            base_mais_proxima = base;
-        }
-    }
-
-    if (base_mais_proxima != NULL) {
         struct conjunto *habilidades_unidas = cria_cjt(N_HABILIDADES);
-        int heroi_id;
-        inicia_iterador_cjt(base_mais_proxima->presentes);
-        printf("%6d: MISSAO  %d BASE %d DIST %d HEROIS [", tempo, m, base_mais_proxima->id, menor_distancia);
-        while (incrementa_iterador_cjt(base_mais_proxima->presentes, &heroi_id)) {
+
+        /* Impressão dos heróis presentes na base atual: */
+        printf("%6d: MISSAO  %d BASE %d DIST %d HEROIS [", tempo, m, base->id, dist);
+        inicia_iterador_cjt(base->presentes);
+        while (incrementa_iterador_cjt(base->presentes, &heroi_id)) {
             printf(" %d", heroi_id);
         }
         printf(" ]\n");
 
-        /* Inicializa um conjunto para a união das habilidades dos heróis presentes: */
-        struct conjunto *habilidades_heroi;
-
-        inicia_iterador_cjt(base_mais_proxima->presentes);
-        while (incrementa_iterador_cjt(base_mais_proxima->presentes, &heroi_id)) {
+        /* Reinicia o iterador do conjunto dos heróis presentes,
+        para imprimir as habilidades de cada um deles: */
+        inicia_iterador_cjt(base->presentes);
+        while (incrementa_iterador_cjt(base->presentes, &heroi_id)) {
             heroi_t *heroi = &mundo.herois[heroi_id];
             printf("%6d: MISSAO  %d HAB HEROI %2d: [", tempo, m, heroi_id);
-
-            habilidades_heroi = heroi->habilidades;
+            struct conjunto *habilidades_heroi = heroi->habilidades;
             inicia_iterador_cjt(habilidades_heroi);
             int hab;
             while (incrementa_iterador_cjt(habilidades_heroi, &hab)) {
                 printf(" %d", hab);
+                /* Insere cada habilidade do herói atual
+                no conjunto de habilidades unidas da base atual: */
                 insere_cjt(habilidades_unidas, hab);
             }
             printf(" ]\n");
         }
 
-        printf("%6d: MISSAO  %d UNIAO HAB BASE %d: [", tempo, m, base_mais_proxima->id);
+        /* Impressão das habilidades unidas da base atual: */
+        printf("%6d: MISSAO  %d UNIAO HAB BASE %d: [", tempo, m, base->id);
         inicia_iterador_cjt(habilidades_unidas);
         int hab;
         while (incrementa_iterador_cjt(habilidades_unidas, &hab)) {
@@ -366,32 +373,32 @@ void processa_evento_missao(struct evento_t *ev) {
         }
         printf(" ]\n");
 
-        /* Inicializa uma flag para verificar se as habilidades unidas, dos heróis presentes na base,
-        formam um conjunto compatível com as habilidades requeridas pela missão: */
-        int podem_cumprir = 1;
-        inicia_iterador_cjt(missao->habilidades);
-        for (i = 0; i < cardHabilidades; i++) {
-            incrementa_iterador_cjt(missao->habilidades, &hab);
-            if (!pertence_cjt(habilidades_unidas, hab)) {
-                podem_cumprir = 0;
-                break;
+        /* Se o conjunto de habilidades requeridas pela missão
+        está contido no conjunto de habilidades unidas
+        dos heróis presentes na base atual,a base pode cumprir a missão: */
+        if (contido_cjt(missao->habilidades, habilidades_unidas)){
+            base_pode_cumprir = 1;
+
+            /* Cada base que pode cumprir a missão
+            verifica se é a mais próxima: */
+            if (dist < menor_distancia) {
+                menor_distancia = dist;
+                base_mais_proxima = base;
             }
         }
 
-        if (podem_cumprir) {
-            printf("%6d: MISSAO  %d CUMPRIDA BASE %d\n", tempo, m, base_mais_proxima->id);
-            missao->cumprida = 1;
-            inicia_iterador_cjt(base_mais_proxima->presentes);
-            while (incrementa_iterador_cjt(base_mais_proxima->presentes, &heroi_id)) {
-                mundo.herois[heroi_id].experiencia++;
-            }
-        } else {
-            printf("%6d: MISSAO  %d IMPOSSIVEL\n", tempo, m);
-            struct evento_t *evento_missao = cria_evento(tempo + 24 * 60, 2, m, 0);
-            insere_lef(lef, evento_missao);
-        }
-
+        /* Libera memória usada para o conjunto de habilidades
+        da base atual, a cada iteração: */
         destroi_cjt(habilidades_unidas);
+    }
+
+    if (base_pode_cumprir && base_mais_proxima != NULL) {
+        printf("%6d: MISSAO  %d CUMPRIDA BASE %d\n", tempo, m, base_mais_proxima->id);
+        missao->cumprida = 1;
+        inicia_iterador_cjt(base_mais_proxima->presentes);
+        while (incrementa_iterador_cjt(base_mais_proxima->presentes, &heroi_id)) {
+            mundo.herois[heroi_id].experiencia++;
+        }
     } else {
         printf("%6d: MISSAO  %d IMPOSSIVEL\n", tempo, m);
         struct evento_t *evento_missao = cria_evento(tempo + 24 * 60, 2, m, 0);
